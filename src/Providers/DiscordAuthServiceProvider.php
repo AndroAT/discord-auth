@@ -18,14 +18,14 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * The plugin's route middleware groups.
      *
-     * @var array
+     * @var array<string, array<string>>
      */
     protected $middlewareGroups = [];
 
     /**
      * The plugin's route middleware.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $routeMiddleware = [
         // 'example' => \Azuriom\Plugin\DiscordAuth\Middleware\ExampleRouteMiddleware::class,
@@ -34,7 +34,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * The policy mappings for this plugin.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $policies = [
         // User::class => UserPolicy::class,
@@ -89,9 +89,9 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Returns the routes that should be able to be added to the navbar.
      *
-     * @return array
+     * @return array<string, string>
      */
-    protected function routeDescriptions()
+    protected function routeDescriptions(): array
     {
         return [
             'discord-auth.index' => 'discord-auth::messages.plugin_name',
@@ -101,9 +101,9 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the admin navigations routes to register in the dashboard.
      *
-     * @return array
+     * @return array<string, array<string, string>>
      */
-    protected function adminNavigation()
+    protected function adminNavigation(): array
     {
         return [
             'discord-auth' => [
@@ -118,16 +118,16 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the user navigations routes to register in the user menu.
      *
-     * @return array
+     * @return array<string, array<string, string>>
      */
-    protected function userNavigation()
+    protected function userNavigation(): array
     {
         return [
             //
         ];
     }
 
-    private function bladeHasDiscordLinked()
+    private function bladeHasDiscordLinked(): callable
     {
         return function () {
             if (Auth::guest()) {
@@ -138,7 +138,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         };
     }
 
-    private function bladeHasNotDiscordLinked()
+    private function bladeHasNotDiscordLinked(): callable
     {
         return function () {
             if (Auth::guest()) {
