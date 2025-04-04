@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $discord_id
  * @property $user_id
  *
- * @package Azuriom\Plugin\DiscordAuth\Controllers\Models
+ * @package Azuriom\Plugin\DiscordAuth\Models
  */
 class Discord extends Model
 {

@@ -4,7 +4,7 @@ namespace Azuriom\Plugin\DiscordAuth\Controllers;
 
 use Azuriom\Http\Controllers\Controller;
 use Azuriom\Plugin\DiscordAuth\Models\Discord;
-use Azuriom\Plugin\DiscordAuth\Models\User;
+use Azuriom\Models\User;
 use Azuriom\Rules\GameAuth;
 use Azuriom\Rules\Username;
 use Illuminate\Http\JsonResponse;
@@ -19,22 +19,24 @@ use Laravel\Socialite\Facades\Socialite;
 
 class DiscordAuthHomeController extends Controller
 {
-
     private $guild;
 
-    public function __construct() {
-        config(["services.discord.client_id" => setting('discord-auth.client_id', '')]);
-        config(["services.discord.client_secret" => setting('discord-auth.client_secret', '')]);
-        config(["services.discord.redirect_id" => "/discord-auth/callback"]);
-        $this->guild = setting('discord-auth.guild', '');
+    public function __construct()
+    {
+        $config = config('plugins.discord-auth.discord');
+        config(["services.discord.client_id" => $config['client_id']]);
+        config(["services.discord.client_secret" => $config['client_secret']]);
+        config(["services.discord.redirect" => "discord-auth.callback"]);
+        $this->guild = $config['guild'] ?? '';
     }
 
-    public function username() {
-        return view('discord-auth::username', ['conditions' => setting('conditions')]);
+    public function username()
+    {
+        return view('discord-auth::username', ['conditions' => setting('discord-auth.conditions')]);
     }
 
-    public function registerUsername(Request $request) {
-
+    public function registerUsername(Request $request)
+    {
         $request->validate([
             'name' => ['required', 'string', 'max:25', 'unique:users', new Username(), new GameAuth()]
         ]);
@@ -57,15 +59,14 @@ class DiscordAuthHomeController extends Controller
             ->scopes('guilds')->redirect();
     }
 
-    private function hasRightGuild($guilds) {
-
-        if ($this->guild == '') {
+    private function hasRightGuild($guilds)
+    {
+        if (empty($this->guild)) {
             return true;
         }
 
-        $found = false;
         foreach ($guilds as $guild) {
-            if ($guild['id'] == $this->guild) {
+            if ($guild['id'] === $this->guild) {
                 return true;
             }
         }
@@ -82,7 +83,6 @@ class DiscordAuthHomeController extends Controller
      */
     public function handleProviderCallback(Request $request)
     {
-
         $user = Socialite::driver('discord')->user();
 
         $guilds = Http::withToken($user->token)
@@ -100,8 +100,7 @@ class DiscordAuthHomeController extends Controller
 
         $discords = Discord::with('user')->where('discord_id', $discordId)->orderByDesc('id')->get();
 
-        if ($discords->isEmpty() || $discords->first()->user->is_deleted) { // Aucun compte discord n'existe
-
+        if ($discords->isEmpty() || $discords->first()->user->is_deleted) {
             if (Auth::guest() && User::where('email', $email)->exists()) {
                 $redirect = redirect();
                 $redirect->setIntendedUrl(route('discord-auth.login'));
@@ -126,7 +125,6 @@ class DiscordAuthHomeController extends Controller
             $discord->discord_id = $discordId;
             $discord->user_id = $userToLogin->id;
             $discord->save();
-
         } else {
             $userToLogin = $discords->first()->user;
         }

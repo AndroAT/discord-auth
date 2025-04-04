@@ -57,7 +57,6 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     public function register()
     {
         $this->registerMiddlewares();
-        require_once __DIR__.'/../../vendor/autoload.php';
     }
 
     /**
@@ -67,16 +66,15 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
      */
     public function boot()
     {
-
         Blade::if('hasDiscordLinked', $this->bladeHasDiscordLinked());
         Blade::if('hasNotDiscordLinked', $this->bladeHasNotDiscordLinked());
 
         Socialite::extend('discord', function (Application $app) {
-            $config = $app->make('config')->get('services.discord');
+            $config = $app->make('config')->get('plugins.discord-auth.discord');
 
-            $redirect = value(Arr::get($config, 'redirect'));
+            $redirect = value(Arr::get($config, 'redirect', 'discord-auth.callback'));
 
-            return new DiscordProvider (
+            return new DiscordProvider(
                 $app->make('request'),
                 $config['client_id'],
                 $config['client_secret'],
@@ -86,15 +84,10 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         });
 
         $this->loadViews();
-
         $this->loadTranslations();
-
         $this->loadMigrations();
-
         $this->registerRouteDescriptions();
-
         $this->registerAdminNavigation();
-
         $this->registerUserNavigation();
 
         Permission::registerPermissions([
@@ -146,7 +139,6 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     private function bladeHasDiscordLinked()
     {
         return function () {
-
             if (Auth::guest()) {
                 return false;
             }
@@ -158,7 +150,6 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     private function bladeHasNotDiscordLinked()
     {
         return function () {
-
             if (Auth::guest()) {
                 return true;
             }
