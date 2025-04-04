@@ -2,6 +2,7 @@
 
 namespace Azuriom\Plugin\DiscordAuth\Models;
 
+use Azuriom\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Discord extends Model
 {
-
     public function user() {
         return $this->belongsTo(User::class);
     }
