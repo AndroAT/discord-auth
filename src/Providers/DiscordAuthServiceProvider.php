@@ -57,17 +57,6 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     public function register()
     {
         $this->registerMiddlewares();
-    }
-
-    /**
-     * Bootstrap any plugin services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Blade::if('hasDiscordLinked', $this->bladeHasDiscordLinked());
-        Blade::if('hasNotDiscordLinked', $this->bladeHasNotDiscordLinked());
 
         Socialite::extend('discord', function (Application $app) {
             $config = $app->make('config')->get('plugins.discord-auth.discord');
@@ -82,6 +71,17 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
                 Arr::get($config, 'guzzle', [])
             );
         });
+    }
+
+    /**
+     * Bootstrap any plugin services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Blade::if('hasDiscordLinked', $this->bladeHasDiscordLinked());
+        Blade::if('hasNotDiscordLinked', $this->bladeHasNotDiscordLinked());
 
         $this->loadViews();
         $this->loadTranslations();
