@@ -8,8 +8,7 @@
         }
     },
     "require": {
-        "martinbean/socialite-discord-provider": "^1.2",
-        "azuriom/core": "^1.2"
+        "martinbean/socialite-discord-provider": "^1.2"
     },
     "replace": {
         "guzzlehttp/guzzle": "*",
