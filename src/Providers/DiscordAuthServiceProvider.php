@@ -5,14 +5,9 @@ namespace Azuriom\Plugin\DiscordAuth\Providers;
 use Azuriom\Extensions\Plugin\BasePluginServiceProvider;
 use Azuriom\Models\Permission;
 use Azuriom\Plugin\DiscordAuth\Models\Discord;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Str;
 use Laravel\Socialite\SocialiteServiceProvider;
-use Laravel\Socialite\Facades\Socialite;
-use MartinBean\Laravel\Socialite\DiscordProvider;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 
 class DiscordAuthServiceProvider extends BasePluginServiceProvider
 {
@@ -26,25 +21,16 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         // Register Socialite service provider
         $this->app->register(SocialiteServiceProvider::class);
 
-        // Register Discord provider
-        $this->app->singleton('discord', function () {
-            $config = config('plugins.discord-auth.discord');
-            
-            $redirect = value(Arr::get($config, 'redirect', 'discord-auth.callback'));
-            
-            return new DiscordProvider(
-                request(),
-                $config['client_id'],
-                $config['client_secret'],
-                Str::startsWith($redirect, '/') ? url($redirect) : $redirect,
-                Arr::get($config, 'guzzle', [])
-            );
-        });
-
-        // Register Socialite provider
-        Socialite::extend('discord', function (Application $app) {
-            return $app->make('discord');
-        });
+        // Configure Discord provider
+        $config = config('plugins.discord-auth.discord');
+        
+        if (!empty($config['client_id']) && !empty($config['client_secret'])) {
+            config(["services.discord" => [
+                'client_id' => $config['client_id'],
+                'client_secret' => $config['client_secret'],
+                'redirect' => url('discord-auth/callback')
+            ]]);
+        }
     }
 
     /**
@@ -54,8 +40,13 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
      */
     public function boot()
     {
-        Blade::if('hasDiscordLinked', $this->bladeHasDiscordLinked());
-        Blade::if('hasNotDiscordLinked', $this->bladeHasNotDiscordLinked());
+        Blade::if('hasDiscordLinked', function () {
+            return Discord::where('user_id', auth()->id())->exists();
+        });
+
+        Blade::if('hasNotDiscordLinked', function () {
+            return !Discord::where('user_id', auth()->id())->exists();
+        });
 
         $this->loadViews();
         $this->loadTranslations();
@@ -91,7 +82,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         return [
             'discord-auth' => [
                 'name' => 'discord-auth::admin.nav.title',
-                'icon' => 'fas fa-hammer',
+                'icon' => 'fab fa-discord',
                 'route' => 'discord-auth.admin.settings',
                 'permission' => 'discord-auth.admin'
             ],
@@ -108,27 +99,5 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         return [
             //
         ];
-    }
-
-    private function bladeHasDiscordLinked()
-    {
-        return function () {
-            if (Auth::guest()) {
-                return false;
-            }
-
-            return Discord::where('user_id', Auth::user()->id)->exists();
-        };
-    }
-
-    private function bladeHasNotDiscordLinked()
-    {
-        return function () {
-            if (Auth::guest()) {
-                return true;
-            }
-
-            return !Discord::where('user_id', Auth::user()->id)->exists();
-        };
     }
 }

@@ -1,16 +1,15 @@
 {
     "id": "discord-auth",
-    "name": "discord-auth",
-    "description": "Plugin for Azuriom",
+    "name": "Discord Auth",
+    "description": "Plugin for Discord authentication",
     "version": "1.0.0",
-    "url": "https://azuriom.com",
+    "url": "https://github.com/yourusername/discord-auth",
     "authors": [
-        "Azuriom"
+        "Your Name"
     ],
     "azuriom_api": "1.2.0",
     "providers": [
-        "\\Azuriom\\Plugin\\DiscordAuth\\Providers\\DiscordAuthServiceProvider",
-        "\\Azuriom\\Plugin\\DiscordAuth\\Providers\\RouteServiceProvider"
+        "\\Azuriom\\Plugin\\DiscordAuth\\Providers\\DiscordAuthServiceProvider"
     ],
     "migrations": [
         "src/Migrations/*"

@@ -1,6 +1,6 @@
 <?php
 
-use Azuriom\Plugin\DiscordAuth\Controllers\DiscordAuthHomeController;
+use Azuriom\Plugin\DiscordAuth\Controllers\DiscordAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [DiscordAuthHomeController::class, 'redirectToProvider'])->name('login');
-Route::get('/callback', [DiscordAuthHomeController::class, 'handleProviderCallback']);
-Route::post('/register-username', [DiscordAuthHomeController::class, 'registerUsername'])->name('register-username');
-Route::get('/username', [DiscordAuthHomeController::class, 'username'])->name('username');
+Route::get('/login', [DiscordAuthController::class, 'redirectToProvider'])->name('login');
+Route::get('/callback', [DiscordAuthController::class, 'handleProviderCallback']);
+Route::get('/username', [DiscordAuthController::class, 'username'])->name('username');
+Route::post('/register-username', [DiscordAuthController::class, 'registerUsername'])->name('register-username');
