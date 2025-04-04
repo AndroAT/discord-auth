@@ -16,39 +16,12 @@ use MartinBean\Laravel\Socialite\DiscordProvider;
 class DiscordAuthServiceProvider extends BasePluginServiceProvider
 {
     /**
-     * The plugin's route middleware groups.
-     *
-     * @var array<string, array<string>>
-     */
-    protected $middlewareGroups = [];
-
-    /**
-     * The plugin's route middleware.
-     *
-     * @var array<string, string>
-     */
-    protected $routeMiddleware = [
-        // 'example' => \Azuriom\Plugin\DiscordAuth\Middleware\ExampleRouteMiddleware::class,
-    ];
-
-    /**
-     * The policy mappings for this plugin.
-     *
-     * @var array<string, string>
-     */
-    protected $policies = [
-        // User::class => UserPolicy::class,
-    ];
-
-    /**
      * Register any plugin services.
      *
      * @return void
      */
     public function register()
     {
-        $this->registerMiddlewares();
-
         Socialite::extend('discord', function (Application $app) {
             $config = $app->make('config')->get('plugins.discord-auth.discord');
 
@@ -89,9 +62,9 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Returns the routes that should be able to be added to the navbar.
      *
-     * @return array<string, string>
+     * @return array
      */
-    protected function routeDescriptions(): array
+    protected function routeDescriptions()
     {
         return [
             'discord-auth.index' => 'discord-auth::messages.plugin_name',
@@ -101,9 +74,9 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the admin navigations routes to register in the dashboard.
      *
-     * @return array<string, array<string, string>>
+     * @return array
      */
-    protected function adminNavigation(): array
+    protected function adminNavigation()
     {
         return [
             'discord-auth' => [
@@ -118,16 +91,16 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the user navigations routes to register in the user menu.
      *
-     * @return array<string, array<string, string>>
+     * @return array
      */
-    protected function userNavigation(): array
+    protected function userNavigation()
     {
         return [
             //
         ];
     }
 
-    private function bladeHasDiscordLinked(): callable
+    private function bladeHasDiscordLinked()
     {
         return function () {
             if (Auth::guest()) {
@@ -138,7 +111,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
         };
     }
 
-    private function bladeHasNotDiscordLinked(): callable
+    private function bladeHasNotDiscordLinked()
     {
         return function () {
             if (Auth::guest()) {
