@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Laravel\Socialite\SocialiteServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use MartinBean\Laravel\Socialite\DiscordProvider;
 
@@ -22,6 +23,9 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
      */
     public function register()
     {
+        // Register Socialite service provider
+        $this->app->register(SocialiteServiceProvider::class);
+
         // Register Discord provider
         $this->app->singleton('discord', function () {
             $config = config('plugins.discord-auth.discord');

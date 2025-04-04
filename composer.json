@@ -8,14 +8,13 @@
         }
     },
     "require": {
-        "martinbean/socialite-discord-provider": "^1.2"
+        "martinbean/socialite-discord-provider": "^1.2",
+        "laravel/socialite": "^5.0"
     },
     "replace": {
         "guzzlehttp/guzzle": "*",
         "psr/log": "*",
         "symfony/http-foundation": "*",
-        "laravel/socialite": "*",
-        "illuminate/support": "*",
         "facade/ignition-contracts": "*"
     }
 }
