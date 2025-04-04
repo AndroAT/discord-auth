@@ -16,25 +16,16 @@ use MartinBean\Laravel\Socialite\DiscordProvider;
 class DiscordAuthServiceProvider extends BasePluginServiceProvider
 {
     /**
-     * The plugin's global HTTP middleware stack.
-     *
-     * @var array<string, string>
-     */
-    protected $middleware = [
-        // \Azuriom\Plugin\DiscordAuth\Middleware\ExampleMiddleware::class,
-    ];
-
-    /**
      * The plugin's route middleware groups.
      *
-     * @var array<string, array<string>>
+     * @var array
      */
     protected $middlewareGroups = [];
 
     /**
      * The plugin's route middleware.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $routeMiddleware = [
         // 'example' => \Azuriom\Plugin\DiscordAuth\Middleware\ExampleRouteMiddleware::class,
@@ -43,7 +34,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * The policy mappings for this plugin.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $policies = [
         // User::class => UserPolicy::class,
@@ -98,7 +89,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Returns the routes that should be able to be added to the navbar.
      *
-     * @return array<string, string>
+     * @return array
      */
     protected function routeDescriptions()
     {
@@ -110,7 +101,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the admin navigations routes to register in the dashboard.
      *
-     * @return array<string, array<string, string>>
+     * @return array
      */
     protected function adminNavigation()
     {
@@ -127,7 +118,7 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
     /**
      * Return the user navigations routes to register in the user menu.
      *
-     * @return array<string, array<string, string>>
+     * @return array
      */
     protected function userNavigation()
     {
