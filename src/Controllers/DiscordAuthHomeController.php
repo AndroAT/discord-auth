@@ -55,8 +55,17 @@ class DiscordAuthHomeController extends Controller
      */
     public function redirectToProvider()
     {
+        $config = config('plugins.discord-auth.discord');
+        
+        config(["services.discord" => [
+            'client_id' => $config['client_id'],
+            'client_secret' => $config['client_secret'],
+            'redirect' => url('discord-auth/callback')
+        ]]);
+
         return Socialite::driver('discord')
-            ->scopes('guilds')->redirect();
+            ->scopes(['identify', 'email', 'guilds'])
+            ->redirect();
     }
 
     private function hasRightGuild($guilds)

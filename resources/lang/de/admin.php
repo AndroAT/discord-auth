@@ -2,18 +2,23 @@
 
 return [
     'nav' => [
-        'title' => 'Discord auth',
+        'title' => 'Discord Auth',
         'settings' => 'Einstellungen',
     ],
 
     'permission' => 'Discord-Auth-Einstellungen anzeigen und ändern',
 
     'settings' => [
-        'title' => 'discord-auth Plugin Einstellungen',
+        'title' => 'Discord Auth Einstellungen',
         'discord-portal' => 'Lege eine Discord APP an',
 
-        'client_id' => 'Client ID',
-        'client_secret' => 'Client Secret',
-        'guild' => 'Guild ID (leer lassen, wenn du dem Benutzer erlauben möchtest, sich anzumelden, auch wenn er nicht auf deinem Gildenserver vorhanden ist)',
+        'discord' => [
+            'client_id' => 'Client ID',
+            'client_secret' => 'Client Secret',
+            'guild_id' => 'Server ID',
+            'guild_id_help' => 'Lass leer, wenn kein Server erforderlich ist',
+            'redirect_uri' => 'Redirect URI',
+            'redirect_uri_help' => 'Lass leer für Standardwert',
+        ],
     ],
 ];
