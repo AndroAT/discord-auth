@@ -22,18 +22,24 @@ class DiscordAuthServiceProvider extends BasePluginServiceProvider
      */
     public function register()
     {
-        Socialite::extend('discord', function (Application $app) {
-            $config = $app->make('config')->get('plugins.discord-auth.discord');
-
+        // Register Discord provider
+        $this->app->singleton('discord', function () {
+            $config = config('plugins.discord-auth.discord');
+            
             $redirect = value(Arr::get($config, 'redirect', 'discord-auth.callback'));
-
+            
             return new DiscordProvider(
-                $app->make('request'),
+                request(),
                 $config['client_id'],
                 $config['client_secret'],
-                Str::startsWith($redirect, '/') ? $app->make('url')->to($redirect) : $redirect,
+                Str::startsWith($redirect, '/') ? url($redirect) : $redirect,
                 Arr::get($config, 'guzzle', [])
             );
+        });
+
+        // Register Socialite provider
+        Socialite::extend('discord', function (Application $app) {
+            return $app->make('discord');
         });
     }
 
